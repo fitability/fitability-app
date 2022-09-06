@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A920002F-2207-4BBE-880E-FC4C40AEEF2F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fitability.Web", "src\Fitability.Web\Fitability.Web.csproj", "{58A7A1FA-DC36-43A6-86CF-B26DA94FF6B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58A7A1FA-DC36-43A6-86CF-B26DA94FF6B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58A7A1FA-DC36-43A6-86CF-B26DA94FF6B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58A7A1FA-DC36-43A6-86CF-B26DA94FF6B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58A7A1FA-DC36-43A6-86CF-B26DA94FF6B9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{58A7A1FA-DC36-43A6-86CF-B26DA94FF6B9} = {A920002F-2207-4BBE-880E-FC4C40AEEF2F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE8C5F26-9B82-4C26-8F0C-42B972C2F53A}
+	EndGlobalSection
+EndGlobal
