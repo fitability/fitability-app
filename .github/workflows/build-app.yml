@@ -1,0 +1,67 @@
+name: Build App
+
+on:
+  workflow_call:
+    inputs:
+      event_name:
+        type: string
+        description: Name of the event trigger
+        required: true
+      ref_name:
+        type: string
+        description: Name of the event trigger reference
+        required: true
+      ref_type:
+        type: string
+        description: Type of the event trigger reference. It should be either `branch` or `tag`
+        required: true
+
+
+jobs:
+  build_test_publish:
+    name: Build Apps
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check events
+      shell: bash
+      run: |
+        echo "${{ inputs.event_name }}"
+        echo "${{ inputs.ref_name }}"
+        echo "${{ inputs.ref_type }}"
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '6.x'
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+        dotnet restore .
+
+    - name: Build solution
+      shell: bash
+      run: |
+        dotnet build .
+
+    - name: Test solution
+      shell: bash
+      run: |
+        dotnet test . -c Release
+
+    - name: Publish artifact
+      if: inputs.event_name == 'push' && github.ref_type == 'tag'
+      shell: bash
+      run: |
+        dotnet publish ./src/Fitability.Web -c Release -o published/web
+
+    - name: Upload artifact for web
+      if: inputs.event_name == 'push' && github.ref_type == 'tag'
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: published/web/wwwroot

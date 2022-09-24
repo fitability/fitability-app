@@ -1,0 +1,23 @@
+name: Release to GitHub
+
+on:
+  workflow_call:
+    inputs:
+      ref_name:
+        type: string
+        description: Name of the event trigger reference
+        required: true
+      
+jobs:
+  deploy:
+    name: Release to GitHub
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Release to GitHub
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: false
+        name: Release ${{ inputs.ref_name }}
+        generate_release_notes: true

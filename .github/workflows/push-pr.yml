@@ -1,0 +1,19 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+    - main
+    - 'feature/**'
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  call_build_app:
+    uses: ./.github/workflows/build-app.yml
+    secrets: inherit
+    with:
+      event_name: ${{ github.event_name }}
+      ref_name: ${{ github.ref_name }}
+      ref_type: ${{ github.ref_type }}
