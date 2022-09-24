@@ -22,7 +22,7 @@ jobs:
 
   call_deploy_gh_pages:
     needs:
-    - build
+    - call_build_app
     uses: ./.github/workflows/deploy-gh-pages.yml
     secrets: inherit
     with:
