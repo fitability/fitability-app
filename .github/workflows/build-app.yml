@@ -16,6 +16,8 @@ on:
         description: Type of the event trigger reference. It should be either `branch` or `tag`
         required: true
 
+env:
+  WEBAPP_PATH: './src/Fitability.Web'
 
 jobs:
   build_test_publish:
@@ -24,12 +26,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check events
-      shell: bash
-      run: |
-        echo "${{ inputs.event_name }}"
-        echo "${{ inputs.ref_name }}"
-        echo "${{ inputs.ref_type }}"
+    # - name: Check events
+    #   shell: bash
+    #   run: |
+    #     echo "${{ inputs.event_name }}"
+    #     echo "${{ inputs.ref_name }}"
+    #     echo "${{ inputs.ref_type }}"
 
     - name: Checkout
       uses: actions/checkout@v3
@@ -43,6 +45,17 @@ jobs:
       shell: bash
       run: |
         dotnet restore .
+
+    - name: Update appsettings.json
+      if: inputs.event_name == 'push' && github.ref_type == 'tag'
+      shell: pwsh
+      run: |
+        $appsettings = Get-Content -Path "${{ env.WEBAPP_PATH }}/wwwroot/appsettings.sample.json" | ConvertFrom-Json
+        $appsettings.AzureAdB2C.Authority = $appsettings.AzureAdB2C.Authority -replace "{{B2C_TENANT_NAME}}", "${{ secrets.B2C_TENANT_NAME }}"
+        $appsettings.AzureAdB2C.Authority = $appsettings.AzureAdB2C.Authority -replace "{{SIGNUP_SIGNIN_POLICY_NAME}}", "${{ secrets.SIGNUP_SIGNIN_POLICY_NAME }}"
+        $appsettings.AzureAdB2C.ClientId = $appsettings.AzureAdB2C.ClientId -replace "{{B2C_CLIENT_ID}}", "${{ secrets.B2C_CLIENT_ID }}"
+
+        $appsettings | ConvertTo-Json -Depth 100 | Out-File -Path "${{ env.WEBAPP_PATH }}/wwwroot/appsettings.json" -Force
 
     - name: Build solution
       shell: bash
@@ -58,7 +71,7 @@ jobs:
       if: inputs.event_name == 'push' && github.ref_type == 'tag'
       shell: bash
       run: |
-        dotnet publish ./src/Fitability.Web -c Release -o published/web
+        dotnet publish ${{ env.WEBAPP_PATH }} -c Release -o published/web
 
     - name: Upload artifact for web
       if: inputs.event_name == 'push' && github.ref_type == 'tag'
