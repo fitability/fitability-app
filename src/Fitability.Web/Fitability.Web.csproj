@@ -12,4 +12,9 @@
     <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="6.0.8" />
   </ItemGroup>
 
+  <!-- https://github.com/dotnet/aspnetcore/issues/33312#issuecomment-1212516529 -->
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Microsoft.Authentication.WebAssembly.Msal" />
+  </ItemGroup>
+
 </Project>
