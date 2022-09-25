@@ -50,7 +50,9 @@ jobs:
       if: inputs.event_name == 'push' && github.ref_type == 'tag'
       shell: pwsh
       run: |
-        $appsettings = Get-Content -Path "${{ env.WEBAPP_PATH }}/wwwroot/appsettings.sample.json" | ConvertFrom-Json
+        mv "${{ env.WEBAPP_PATH }}/wwwroot/appsettings.sample.json" "${{ env.WEBAPP_PATH }}/wwwroot/appsettings.json"
+
+        $appsettings = Get-Content -Path "${{ env.WEBAPP_PATH }}/wwwroot/appsettings.json" | ConvertFrom-Json
         $appsettings.AzureAdB2C.Authority = $appsettings.AzureAdB2C.Authority -replace "{{B2C_TENANT_NAME}}", "${{ secrets.B2C_TENANT_NAME }}"
         $appsettings.AzureAdB2C.Authority = $appsettings.AzureAdB2C.Authority -replace "{{SIGNUP_SIGNIN_POLICY_NAME}}", "${{ secrets.SIGNUP_SIGNIN_POLICY_NAME }}"
         $appsettings.AzureAdB2C.ClientId = $appsettings.AzureAdB2C.ClientId -replace "{{B2C_CLIENT_ID}}", "${{ secrets.B2C_CLIENT_ID }}"
@@ -72,6 +74,12 @@ jobs:
       shell: bash
       run: |
         dotnet publish ${{ env.WEBAPP_PATH }} -c Release -o published/web
+
+    - name: Check appsettings.json
+      if: inputs.event_name == 'push' && github.ref_type == 'tag'
+      shell: pwsh
+      run: |
+        Get-Content -Path "published/web/wwwroot/appsettings.json"
 
     - name: Upload artifact for web
       if: inputs.event_name == 'push' && github.ref_type == 'tag'
